@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teuta Travel prompt library</title>
+<meta name="description" content="Five team assistants with instructions, input templates, guardrails, examples and an automated prompt lint. Live demo by EmSoft.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Mono:wght@400;500&family=Red+Hat+Text:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f4f0e6; --side:#ebe6d9; --card:#fbf9f3; --ink:#1c2422; --muted:#5a6560; --line:#d5cfbf;
+  --accent:#0d5c5a; --accent-ink:#08403f; --tint:#dcebe6;
+  --fail:#9b3a2c; --fail-tint:#f4e0da; --warn:#7a5a10; --warn-tint:#f3e8c8;
+  --serif:"Source Serif 4",Georgia,serif; --sans:"Red Hat Text",system-ui,sans-serif; --mono:"Red Hat Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink)}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.2;margin:0}
+button{font:inherit;cursor:pointer}
+.banner{background:var(--accent-ink);color:#e9f1ee;font-size:14px;padding:8px 16px;text-align:center}
+.banner a{color:#fff}
+.shell{display:grid;grid-template-columns:288px minmax(0,1fr);min-height:calc(100vh - 38px)}
+aside{background:var(--side);border-right:1px solid var(--line);padding:28px 22px;position:sticky;top:0;align-self:start;height:100vh;overflow:auto}
+.brand{font-family:var(--serif);font-size:22px;font-weight:700;line-height:1.15}
+.brand small{display:block;font:500 12px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.navlabel{font:700 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:28px 0 8px}
+.nav a{display:block;text-decoration:none;color:var(--ink);padding:9px 10px;margin:0 -10px;border-left:3px solid transparent;line-height:1.3}
+.nav a:hover{background:#e2dccd}
+.nav a[aria-current=page]{border-left-color:var(--accent);background:#e2dccd;font-weight:700}
+.nav a span{display:block;font-size:13px;color:var(--muted);font-weight:400}
+.navfoot{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.navd>summary{display:none}
+main{padding:44px 56px 80px;max-width:1180px;width:100%}
+.eyebrow{font:700 12px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+h1{font-size:clamp(30px,4vw,44px);margin:8px 0 14px;letter-spacing:-.01em}
+.lede{font-size:19px;max-width:68ch;color:#2c3733;margin:0}
+.meta-row{display:flex;flex-wrap:wrap;gap:6px 22px;margin:18px 0 0;font-size:14px;color:var(--muted)}
+.meta-row b{color:var(--ink);font-weight:500}
+section{margin-top:56px;scroll-margin-top:64px}
+section>h2{font-size:26px;display:flex;gap:12px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:20px}
+section>h2 .n{font:500 13px var(--mono);color:var(--accent)}
+.subnav{position:sticky;top:0;background:var(--paper);z-index:5;display:flex;gap:20px;overflow-x:auto;max-width:100%;padding:12px 0;margin-top:26px;border-bottom:1px solid var(--line);font-size:14px;white-space:nowrap}
+.subnav a{text-decoration:none;color:var(--muted)}
+.subnav a:hover{color:var(--accent-ink)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:700 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+td.num,th.num{font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto;max-width:100%}
+.chip{display:inline-block;font:500 12px var(--mono);padding:2px 7px;border:1px solid var(--line);background:var(--card);color:var(--ink);margin:0 4px 4px 0}
+.chip.rule{border-color:var(--accent);color:var(--accent-ink);background:var(--tint)}
+.st{font:500 11px var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;display:inline-block}
+.st.pass{background:var(--tint);color:var(--accent-ink)}
+.st.fail{background:var(--fail-tint);color:var(--fail)}
+.btn{background:var(--accent);color:#fff;border:1px solid var(--accent);padding:8px 14px;font-weight:500;font-size:14px}
+.btn:hover{background:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--accent-ink)}
+.btn.ghost:hover{background:var(--tint)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.glance{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px 48px}
+.glance h3{font-size:15px;font-family:var(--sans);font-weight:700;margin:0 0 6px;letter-spacing:0}
+.glance p,.glance ul{margin:0}
+.glance ul{padding-left:18px}
+.glance li{margin:3px 0}
+.dd h3::after{content:"";}
+.pill-do{color:var(--accent-ink)} .pill-dont{color:var(--fail)}
+.two{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:36px;align-items:start}
+textarea,input[type=text]{width:100%;font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 10px;border-radius:0}
+textarea:focus,input:focus,select:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+textarea.prompt{font:13px/1.55 var(--mono);min-height:340px;resize:vertical}
+select{font:inherit;border:1px solid var(--line);background:var(--card);padding:8px;max-width:100%}
+pre.mono,.mono-block{font:13px/1.55 var(--mono);background:var(--card);border:1px solid var(--line);padding:14px;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+pre.scroll{white-space:pre;overflow-x:auto;overflow-wrap:normal}
+.lint{border-top:2px solid var(--ink)}
+.lint .sum{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-weight:700}
+.chk{padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.chk .top{display:flex;gap:10px;align-items:baseline}
+.chk .what{color:var(--muted);font-size:13.5px;margin-top:2px}
+.chk ul{margin:6px 0 0;padding-left:18px;color:var(--fail)}
+.breaker{margin:0 0 16px;font-size:14px}
+.breaker .row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.field{margin-bottom:14px}
+.field label{display:block;font-weight:700;font-size:14px;margin-bottom:2px}
+.field .hint{font-size:13px;color:var(--muted);margin-bottom:4px}
+.req{color:var(--accent);font-weight:500;font-size:12px}
+.msg{padding:9px 12px;margin:0 0 12px;font-size:14px;border-left:3px solid}
+.msg.block{background:var(--fail-tint);border-color:var(--fail)}
+.msg.warn{background:var(--warn-tint);border-color:var(--warn)}
+.exlist{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.exbtn{background:var(--card);border:1px solid var(--line);padding:8px 12px;text-align:left;font-size:14px;color:var(--ink);max-width:100%}
+.exbtn[aria-pressed=true]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent);background:var(--tint)}
+.exbtn small{display:block;color:var(--muted);font:12px var(--mono)}
+.sbs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:0;border:1px solid var(--line);background:var(--card)}
+.sbs>div{padding:16px 18px;min-width:0}
+.sbs>div+div{border-left:1px solid var(--line)}
+.sbs h3{font:700 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.sbs .label{font-size:12.5px;color:var(--accent-ink);margin-bottom:10px}
+.sbs pre{background:none;border:0;padding:0;font:12.5px/1.55 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+.sbs pre.csv{white-space:pre;overflow-x:auto}
+.mail p{margin:0 0 12px;white-space:pre-wrap}
+.mail .subj{font-weight:700}
+.mail .internal{background:var(--warn-tint);border-left:3px solid var(--warn);padding:8px 12px;font-size:14px;margin-top:6px}
+.rendered h3,.rendered h4,.rendered h5{font-family:var(--serif);margin:16px 0 6px}
+.rendered h3{font-size:20px}.rendered h4{font-size:17px}.rendered h5{font-size:15px}
+.rendered p{margin:0 0 10px}.rendered ul,.rendered ol{margin:0 0 10px;padding-left:20px}
+.rendered table{font-size:13.5px;margin:6px 0 12px}
+.rendered code{font:12.5px var(--mono);background:#ece6d6;padding:1px 4px}
+.rules li{margin:6px 0}
+details.kn{border-bottom:1px solid var(--line);padding:10px 0}
+details.kn summary{cursor:pointer;font-weight:500;display:flex;gap:10px;align-items:baseline}
+details.kn summary span{font:12.5px var(--mono);color:var(--muted)}
+.tree{font:13px/1.6 var(--mono);white-space:pre;overflow-x:auto;background:var(--card);border:1px solid var(--line);padding:12px 14px}
+.home-table td:first-child{font-family:var(--serif);font-size:18px;font-weight:600;white-space:nowrap}
+.home-table a{color:var(--ink);text-decoration:none;border-bottom:2px solid var(--accent)}
+.stdlist{counter-reset:s;padding:0;margin:0;list-style:none}
+.stdlist li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;padding:10px 0;border-bottom:1px solid var(--line)}
+.stdlist li::before{content:counter(s,decimal-leading-zero);font:500 13px var(--mono);color:var(--accent);padding-top:2px}
+.stdlist b{font-weight:700}
+.stdlist span{display:block;color:var(--muted);font-size:14.5px}
+.small{font-size:13.5px;color:var(--muted)}
+.sr{position:absolute;left:-9999px}
+@media (max-width:1000px){
+  .shell{display:block}
+  aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:16px}
+  .navd>summary{display:block;font:700 13px var(--sans);letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:6px 0}
+  .navd .brand{margin-bottom:6px}
+  main{padding:28px 16px 64px}
+  .glance,.two{grid-template-columns:minmax(0,1fr)}
+  .sbs{grid-template-columns:minmax(0,1fr)}
+  .sbs>div+div{border-left:0;border-top:1px solid var(--line)}
+  .home-table td:first-child{white-space:normal}
+  .hide-m{display:none}
+  .lede{font-size:17px}
+}
+</style>
+</head>
+<body>
+<div class="banner">Live demo by EmSoft. Teuta Travel is a fictional travel agency in Durrës. <a href="https://github.com/enxo7899/team-prompt-library">Source on GitHub</a></div>
+<div class="shell">
+  <aside>
+    <details class="navd" id="navd">
+      <summary>Assistants</summary>
+      <div class="brand"><a href="?" data-link style="text-decoration:none;color:inherit">Teuta Travel</a><small>Assistant handbook</small></div>
+      <div class="navlabel">Library</div>
+      <nav class="nav" id="nav"></nav>
+      <div class="navfoot" id="navfoot"></div>
+    </details>
+  </aside>
+  <main id="main" aria-live="polite"><p class="small">Loading the library...</p></main>
+</div>
+
+<script type="module">
+import { loadLibrary } from "./src/load.js";
+import { lintBundle, lintLibrary, CHECKS, getRules } from "./src/lint.js";
+import { render, parse, preflight, redactCards } from "./src/template.js";
+import { chatgptMarkdown, claudeProjectFiles } from "./src/export.js";
+import { wordCount, charCount } from "./src/text.js";
+
+const read = (p) => fetch(p).then((r) => { if (!r.ok) throw new Error(p); return r.text(); });
+const config = JSON.parse(await read("src/lint.config.json"));
+const lib = await loadLibrary(read);
+const pristine = lintLibrary(lib, config);
+const work = {};          // slug -> editable copy of the bundle
+const ui = {};            // slug -> { ex, values }
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const main = $("#main");
+
+/* ---------- tiny markdown renderer (headings, lists, tables, bold, code) ---------- */
+const inline = (s) => esc(s).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+function md(src) {
+  const L = src.replace(/\r/g, "").split("\n");
+  const out = [];
+  let i = 0;
+  const special = (l) => /^(#{1,4}\s|\s*[-*]\s|\s*\d+\.\s|\|)/.test(l);
+  while (i < L.length) {
+    const l = L[i];
+    let m;
+    if (/^\s*$/.test(l)) { i++; continue; }
+    if ((m = /^(#{1,4})\s+(.*)$/.exec(l))) { const n = Math.min(m[1].length + 2, 5); out.push(`<h${n}>${inline(m[2])}</h${n}>`); i++; continue; }
+    if (/^\|/.test(l) && /^\|?\s*:?-{2,}/.test(L[i + 1] || "")) {
+      const cells = (r) => r.replace(/^\||\|\s*$/g, "").split("|").map((c) => c.trim());
+      const head = cells(l); i += 2; const body = [];
+      while (i < L.length && /^\|/.test(L[i])) body.push(cells(L[i++]));
+      out.push(`<div class="tablewrap"><table><thead><tr>${head.map((h) => `<th>${inline(h)}</th>`).join("")}</tr></thead><tbody>${body.map((r) => `<tr>${r.map((c) => `<td>${inline(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`);
+      continue;
+    }
+    if (/^\s*[-*]\s+/.test(l)) { const it = []; while (i < L.length && /^\s*[-*]\s+/.test(L[i])) it.push(L[i++].replace(/^\s*[-*]\s+/, "")); out.push(`<ul>${it.map((x) => `<li>${inline(x)}</li>`).join("")}</ul>`); continue; }
+    if (/^\s*\d+\.\s+/.test(l)) { const it = []; while (i < L.length && /^\s*\d+\.\s+/.test(L[i])) it.push(L[i++].replace(/^\s*\d+\.\s+/, "")); out.push(`<ol>${it.map((x) => `<li>${inline(x)}</li>`).join("")}</ol>`); continue; }
+    const p = []; while (i < L.length && !/^\s*$/.test(L[i]) && !(p.length && special(L[i]))) p.push(L[i++]);
+    out.push(`<p>${inline(p.join(" "))}</p>`);
+  }
+  return out.join("");
+}
+
+/* ---------- helpers ---------- */
+const bySlug = (s) => lib.find((b) => b.slug === s);
+const getWork = (s) => (work[s] ??= structuredClone(bySlug(s)));
+const lintOf = (b) => lintBundle(b, config);
+async function copy(text, btn) {
+  try { await navigator.clipboard.writeText(text); } catch {
+    const t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); } catch {} t.remove();
+  }
+  if (btn) { const o = btn.textContent; btn.textContent = "Copied"; setTimeout(() => (btn.textContent = o), 1400); }
+}
+function download(name, text) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type: "text/markdown" }));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+}
+const FORMAT = { text: "Plain-text email", markdown: "Markdown report", json: "JSON" };
+const params = () => new URLSearchParams(location.search);
+
+/* ---------- navigation ---------- */
+function drawNav(active) {
+  $("#nav").innerHTML = `<a href="?" data-link ${!active ? 'aria-current="page"' : ""}>Library overview<span>Standard, status, all assistants</span></a>` +
+    lib.map((b) => { const r = pristine.reports.find((x) => x.slug === b.slug); return `<a href="?a=${b.slug}" data-link ${active === b.slug ? 'aria-current="page"' : ""}>${esc(b.meta.name)}<span>${esc(b.meta.ownerRole)} · lint ${r.passed}/${r.checks.length}</span></a>`; }).join("");
+  $("#navfoot").innerHTML = `Library lint: <b>${pristine.reports.filter((r) => r.ok).length} of ${lib.length}</b> assistants pass, ${pristine.checksRun} checks run in this page, with the same code as <code>npm run lint</code>.`;
+}
+document.addEventListener("click", (e) => {
+  const a = e.target.closest("a[data-link]");
+  if (!a) return;
+  e.preventDefault();
+  history.pushState({}, "", a.getAttribute("href"));
+  route(); window.scrollTo(0, 0);
+});
+addEventListener("popstate", route);
+if (matchMedia("(min-width:1001px)").matches) $("#navd").open = true;
+
+/* ---------- home ---------- */
+function home() {
+  drawNav(null);
+  document.title = "Teuta Travel prompt library";
+  main.innerHTML = `
+    <div class="eyebrow">Teuta Travel · internal handbook</div>
+    <h1>Five assistants, one standard</h1>
+    <p class="lede">When everyone on a 12-person team writes their own prompts, the output is inconsistent and sometimes risky. This library gives each job one assistant with written instructions, an input template, guardrails and worked examples. A lint keeps every prompt to the same standard.</p>
+    <section>
+      <h2><span class="n">1</span>The assistants</h2>
+      <div class="tablewrap"><table class="home-table">
+        <thead><tr><th>Assistant</th><th>What it does</th><th class="hide-m">Owner</th><th class="hide-m">Output</th><th class="num">Lint</th></tr></thead>
+        <tbody>${lib.map((b) => { const r = pristine.reports.find((x) => x.slug === b.slug); return `<tr>
+          <td><a href="?a=${b.slug}" data-link>${esc(b.meta.name)}</a></td>
+          <td>${esc(b.meta.purpose)}<div class="small">${getRules(b).length} rules · ${b.examples.length} examples · ${Object.keys(b.knowledge).length} knowledge files</div></td>
+          <td class="hide-m">${esc(b.meta.ownerRole)}</td><td class="hide-m">${FORMAT[b.meta.output.format]}</td>
+          <td class="num"><span class="st ${r.ok ? "pass" : "fail"}">${r.passed}/${r.checks.length}</span></td></tr>`; }).join("")}</tbody>
+      </table></div>
+    </section>
+    <section>
+      <h2><span class="n">2</span>What the lint enforces</h2>
+      <p class="small" style="margin-top:0">Run on every assistant, every time, in the terminal, in CI and on this page.</p>
+      <ol class="stdlist">${CHECKS.map((c) => `<li><div><b>${esc(c.title)}</b><span>${esc(c.what)}</span></div></li>`).join("")}</ol>
+    </section>
+    <section>
+      <h2><span class="n">3</span>Try to break it</h2>
+      <p style="max-width:68ch;margin-top:0">Open any assistant and edit its instructions in the lint panel, or use the buttons that delete a section, leave a TODO or weaken a rule. The report updates as you type. Try it on <a href="?a=email-reply&break=refusals,rule#lint" data-link>the email drafter with its refusals section and rule R2 deleted</a>.</p>
+    </section>`;
+}
+
+/* ---------- assistant detail ---------- */
+const BREAKS = {
+  refusals: { label: "Delete the refusals section", run: (b) => { b.instructions = b.instructions.replace(/^## Refusals and escalation[\s\S]*?(?=^## )/m, ""); } },
+  todo: { label: "Leave a TODO in", run: (b) => { b.instructions += "\nTODO: add the winter opening hours.\n"; } },
+  rule: { label: "Delete rule R2", run: (b) => { b.instructions = b.instructions.replace(/^R2\..*\n/m, ""); } },
+  vague: { label: "Make rule R1 vague", run: (b) => { b.instructions = b.instructions.replace(/^R1\..*$/m, "R1. Try to keep to the facts if possible."); } },
+  banned: { label: "Add a banned word to example 1", run: (b) => { const e = b.examples[0]; e.output = b.meta.output.format === "json" ? e.output.replace('"text": "', '"text": "Unforgettable. ') : e.output.replace(/\n/, "\nThis will be an unforgettable trip.\n"); } },
+  format: { label: "Break example 1's format", run: (b) => { const e = b.examples[0], f = b.meta.output.format; e.output = f === "json" ? e.output.slice(0, -4) : f === "markdown" ? e.output.replace(/^## (.+)$/m, "# $1") : e.output.replace("Internal note (not for the client):", "Note:"); } },
+};
+
+function assistant(slug) {
+  const base = bySlug(slug);
+  if (!base) { home(); return; }
+  drawNav(slug);
+  const b = getWork(slug);
+  const q = params();
+  ui[slug] ??= { ex: Math.max(0, Number(q.get("ex") || 1) - 1), fill: Math.max(0, Number(q.get("fill") || 1) - 1) };
+  const brk = q.get("break") || "";
+  if (brk !== (ui[slug].breakKey ?? "")) {
+    ui[slug].breakKey = brk;
+    for (const k of brk.split(",")) if (BREAKS[k]) BREAKS[k].run(b);
+  }
+  document.title = `${base.meta.name} · Teuta Travel prompt library`;
+  const m = base.meta;
+  const tree = claudeProjectFiles(base).map((f) => f.path.replace(`${slug}/claude-project/`, "")).filter((p) => !p.startsWith("test-cases/") || /01-/.test(p));
+  main.innerHTML = `
+    <div class="eyebrow">Assistant handbook · owner: ${esc(m.ownerRole)}</div>
+    <h1>${esc(m.name)}</h1>
+    <p class="lede">${esc(m.purpose)}</p>
+    <div class="meta-row"><span>Output <b>${FORMAT[m.output.format]}</b></span><span>Rules <b>${getRules(base).length}</b></span><span>Examples <b>${base.examples.length}</b></span><span>Knowledge files <b>${Object.keys(base.knowledge).length}</b></span><span id="topstatus"></span></div>
+    <nav class="subnav" aria-label="On this page"><a href="#glance">At a glance</a><a href="#instructions">Instructions and lint</a><a href="#try">Try it</a><a href="#knowledge">Knowledge</a><a href="#examples">Examples</a><a href="#export">Use it</a></nav>
+
+    <section id="glance"><h2><span class="n">1</span>At a glance</h2>
+      <div class="glance">
+        <div><h3>Inputs it needs</h3><ul>${m.inputs.map((i) => `<li>${esc(i.label)} ${i.required ? '<span class="req">required</span>' : '<span class="small">optional</span>'}</li>`).join("")}</ul></div>
+        <div><h3>What comes back</h3><p>${esc(m.output.description)}</p></div>
+        <div><h3 class="pill-do">Do</h3><ul>${m.doDont.do.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>
+        <div><h3 class="pill-dont">Do not</h3><ul>${m.doDont.dont.map((x) => `<li>${esc(x.replace(/^Do not /, ""))}</li>`).join("")}</ul></div>
+        <div><h3>Model settings</h3><p>Temperature ${m.modelSettings.temperature} · web search ${m.modelSettings.webBrowsing ? "on" : "off"} · code interpreter ${m.modelSettings.codeInterpreter ? "on" : "off"}.</p><p class="small">${esc(m.modelSettings.notes)}</p></div>
+        <div><h3>Where it goes</h3><p><b>ChatGPT:</b> ${esc(m.paste.chatgpt)}</p><p><b>Claude:</b> ${esc(m.paste.claude)}</p></div>
+      </div>
+    </section>
+
+    <section id="instructions"><h2><span class="n">2</span>Instructions and lint</h2>
+      <div class="two">
+        <div>
+          <div class="toolbar"><button class="btn" id="copyins">Copy instructions</button><button class="btn ghost" id="reset">Reset all edits</button><span class="small" id="counts"></span></div>
+          <textarea class="prompt" id="ins" spellcheck="false" aria-label="Instructions, editable"></textarea>
+          <p class="small">This is the text you paste into ChatGPT or Claude. Edit it: the lint on the right re-runs on every keystroke.</p>
+        </div>
+        <div id="lintwrap">
+          <div class="breaker"><b>Try to break the standard.</b> Each button damages this assistant, and the lint should catch it.<div class="row">${Object.entries(BREAKS).map(([k, v]) => `<button class="btn ghost" data-break="${k}">${v.label}</button>`).join("")}</div></div>
+          <div class="lint" id="lint"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="try"><h2><span class="n">3</span>Try it: fill in the template</h2>
+      <p style="margin-top:0;max-width:70ch">Fill the fields and the prompt assembles on the right. Paste your instructions into the assistant first, then send this as the first message. This page does not call a model: the examples below show what following the instructions looks like.</p>
+      <div class="toolbar"><label for="loadex" class="small">Load an example:</label><select id="loadex">${base.examples.map((e, i) => `<option value="${i}">${esc(e.title)}</option>`).join("")}<option value="blank">Blank form</option></select></div>
+      <div class="two">
+        <form id="form" autocomplete="off" onsubmit="return false">${m.inputs.map((i) => `<div class="field"><label for="f_${i.name}">${esc(i.label)} ${i.required ? '<span class="req">required</span>' : '<span class="small">optional</span>'}</label><div class="hint">${esc(i.hint || "")}</div>${i.multiline ? `<textarea id="f_${i.name}" data-f="${i.name}" rows="${i.name === "csv" || i.name === "contract_text" ? 9 : 6}" style="font:13px/1.5 var(--mono)"></textarea>` : `<input type="text" id="f_${i.name}" data-f="${i.name}">`}</div>`).join("")}</form>
+        <div>
+          <div id="pre"></div>
+          <div class="toolbar"><button class="btn" id="copyprompt">Copy prompt</button><span class="small" id="pcount"></span></div>
+          <pre class="mono" id="prompt" aria-label="Assembled prompt"></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="knowledge"><h2><span class="n">4</span>Knowledge files</h2>
+      <p style="margin-top:0;max-width:70ch">Short reference documents the assistant reads. The instructions name each one, and the lint fails if one is not mentioned.</p>
+      ${Object.entries(base.knowledge).map(([f, t]) => `<details class="kn"><summary>${esc(f)}<span>${wordCount(t)} words</span></summary><div class="rendered" style="padding:10px 0 4px">${md(t)}</div></details>`).join("")}
+    </section>
+
+    <section id="examples"><h2><span class="n">5</span>Examples: input and output</h2>
+      <div class="exlist" id="exlist"></div>
+      <div id="exview"></div>
+    </section>
+
+    <section id="export"><h2><span class="n">6</span>Use it</h2>
+      <div class="glance">
+        <div><h3>ChatGPT Custom GPT</h3><p class="small" style="margin-bottom:10px">One Markdown file with the name, instructions, knowledge files and input template, in the order of the GPT builder.</p><button class="btn" id="dlgpt">Download chatgpt-custom-gpt.md</button> <p class="small" id="dlnote"></p></div>
+        <div><h3>Claude Project folder</h3><p class="small" style="margin-bottom:10px">Written by <code>npm run export</code> to <code>dist/${slug}/claude-project/</code>:</p><div class="tree">${esc(tree.join("\n"))}</div></div>
+      </div>
+    </section>`;
+
+  const ins = $("#ins");
+  ins.value = b.instructions;
+  const fit = () => { ins.style.height = "auto"; ins.style.height = Math.max(340, Math.min(ins.scrollHeight + 4, 760)) + "px"; };
+  const redrawLint = () => {
+    const rep = lintOf(b);
+    $("#counts").textContent = `${wordCount(b.instructions)} words · ${charCount(b.instructions)} / 8,000 characters`;
+    $("#lint").innerHTML = `<div class="sum"><span>${rep.ok ? "All checks pass" : `${rep.errors} of ${rep.checks.length} checks fail`}</span><span class="st ${rep.ok ? "pass" : "fail"}">${rep.passed}/${rep.checks.length}</span></div>` +
+      rep.checks.map((c) => { const meta = CHECKS.find((x) => x.id === c.id); return `<div class="chk"><div class="top"><span class="st ${c.status}">${c.status === "pass" ? "pass" : "fail"}</span><b>${esc(c.title)}</b></div>${c.issues.length ? `<ul>${c.issues.slice(0, 6).map((x) => `<li>${esc(x)}</li>`).join("")}${c.issues.length > 6 ? `<li>and ${c.issues.length - 6} more</li>` : ""}</ul>` : `<div class="what">${esc(meta.what)}</div>`}</div>`; }).join("");
+    $("#topstatus").innerHTML = `Lint <span class="st ${rep.ok ? "pass" : "fail"}">${rep.ok ? "all pass" : rep.errors + " failing"}</span>`;
+    $("#dlgpt").disabled = !rep.ok;
+    $("#dlnote").textContent = rep.ok ? "" : "Export is blocked while the lint fails, the same as npm run export.";
+    drawExamples();
+  };
+  ins.addEventListener("input", () => { b.instructions = ins.value; fit(); redrawLint(); });
+  $("#copyins").onclick = (e) => copy(ins.value, e.currentTarget);
+  $("#reset").onclick = () => { work[slug] = structuredClone(base); ui[slug].breakKey = null; history.replaceState({}, "", "?a=" + slug); assistant(slug); };
+  $("#lintwrap").addEventListener("click", (e) => {
+    const k = e.target.dataset?.break; if (!k) return;
+    BREAKS[k].run(b); ins.value = b.instructions; fit(); redrawLint();
+  });
+  $("#dlgpt").onclick = () => download(`${slug}-chatgpt-custom-gpt.md`, chatgptMarkdown(b));
+
+  /* try it */
+  const fields = [...document.querySelectorAll("[data-f]")];
+  const values = () => Object.fromEntries(fields.map((f) => [f.dataset.f, f.value]));
+  const loadExample = (idx) => {
+    const v = idx === "blank" ? {} : parse(base.template, base.examples[idx].input) || {};
+    for (const f of fields) f.value = (v[f.dataset.f] ?? "") === "(none)" ? "" : v[f.dataset.f] ?? "";
+    updatePrompt();
+  };
+  function updatePrompt() {
+    const v = values();
+    const text = render(base.template, v);
+    $("#prompt").textContent = text;
+    $("#pcount").textContent = `${wordCount(text)} words`;
+    const issues = preflight(v, m);
+    $("#pre").innerHTML = issues.map((i) => `<div class="msg ${i.level}">${esc(i.message)}${i.code === "card" ? ' <button class="btn ghost" data-redact style="padding:3px 8px;margin-left:6px">Remove card numbers</button>' : ""}</div>`).join("");
+    $("#copyprompt").disabled = issues.some((i) => i.level === "block");
+  }
+  $("#form").addEventListener("input", updatePrompt);
+  $("#pre").addEventListener("click", (e) => { if (e.target.matches("[data-redact]")) { for (const f of fields) f.value = redactCards(f.value); updatePrompt(); } });
+  $("#loadex").onchange = (e) => loadExample(e.target.value);
+  $("#loadex").value = String(Math.min(ui[slug].fill, base.examples.length - 1));
+  $("#copyprompt").onclick = (e) => copy($("#prompt").textContent, e.currentTarget);
+  loadExample(String(Math.min(ui[slug].fill, base.examples.length - 1)));
+
+  /* examples */
+  function drawExamples() {
+    const rules = getRules(b);
+    $("#exlist").innerHTML = b.examples.map((e, i) => `<button class="exbtn" data-ex="${i}" aria-pressed="${i === ui[slug].ex}">${String(i + 1).padStart(2, "0")} ${esc(e.title)}<small>${(e.tags || []).join(" ")}</small></button>`).join("");
+    const e = b.examples[Math.min(ui[slug].ex, b.examples.length - 1)];
+    const fmt = b.meta.output.format;
+    let out;
+    if (fmt === "markdown") out = `<div class="rendered">${md(e.output)}</div>`;
+    else if (fmt === "json") out = `<pre>${esc(e.output)}</pre>`;
+    else {
+      const [mail, note] = e.output.split(/\n\n(?=Internal note)/);
+      const lines = mail.trim().split(/\n\n/);
+      out = `<div class="mail">${lines.map((p, i) => `<p class="${i === 0 && p.startsWith("Subject:") ? "subj" : ""}">${esc(p)}</p>`).join("")}${note ? `<div class="internal">${esc(note.trim())}</div>` : ""}</div>`;
+    }
+    $("#exview").innerHTML = `
+      <div class="sbs"><div><h3>Input: what the team member sends</h3><pre class="${/csv|CSV:/.test(e.input) ? "csv" : ""}">${esc(e.input.trim())}</pre></div>
+      <div><h3>Output</h3><div class="label">Example output, produced by following the instructions above</div>${out}</div></div>
+      <p class="small" style="margin:14px 0 6px"><b>Rules this example exercises</b></p>
+      <ul class="rules small" style="margin:0;padding-left:18px">${(e.tags || []).map((t) => { const r = rules.find((x) => x.id === t); return `<li><span class="chip rule">${t}</span>${r ? esc(r.text) : "No such rule in the instructions."}</li>`; }).join("")}</ul>`;
+  }
+  $("#exlist").addEventListener("click", (e) => { const x = e.target.closest("[data-ex]"); if (!x) return; ui[slug].ex = Number(x.dataset.ex); drawExamples(); });
+
+  fit(); redrawLint();
+  if (location.hash) $(location.hash)?.scrollIntoView();
+}
+
+function route() {
+  const a = params().get("a");
+  if (a) assistant(a); else home();
+}
+route();
+</script>
+</body>
+</html>

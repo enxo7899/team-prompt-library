@@ -1,0 +1,15 @@
+{
+  "name": "team-prompt-library",
+  "version": "1.0.0",
+  "description": "A library of five tested team assistants (instructions, input templates, guardrails, examples) with an automated lint that keeps every prompt to the same standard.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "lint": "node scripts/lint.mjs",
+    "export": "node scripts/export.mjs",
+    "dev": "python3 -m http.server 5182 --bind 127.0.0.1",
+    "screenshots": "node scripts/screenshots.mjs"
+  },
+  "license": "MIT",
+  "author": "EmSoft"
+}

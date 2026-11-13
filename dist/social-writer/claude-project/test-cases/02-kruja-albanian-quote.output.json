@@ -1,0 +1,23 @@
+{
+  "posts": [
+    {
+      "platform": "facebook",
+      "language": "al",
+      "text": "Kalaja e Krujës dhe pazari i vjetër, një tur katërorësh me nisje nga Durrësi ose Tirana. Nisemi çdo ditë në orën 9:00. Çmimi është 24 euro për të rritur, me guidë dhe transport të përfshirë. Biletën e Muzeut Kombëtar Gjergj Kastrioti, 3 euro, e paguani në vend. Rezervoni te Teuta Travel në Durrës.",
+      "hashtags": [
+        "#Shqipëria",
+        "#Kruja",
+        "#Durres",
+        "#TeutaTravel"
+      ],
+      "alt_text": "Kalaja e Krujës me kullën e sahatit në mëngjes",
+      "char_count": 298
+    }
+  ],
+  "flags": [
+    {
+      "code": "consent_missing",
+      "message": "Guest quote not used: consent is not confirmed. Get written consent from the guest, then ask again."
+    }
+  ]
+}

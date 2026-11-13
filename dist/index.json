@@ -1,0 +1,131 @@
+{
+  "company": "Teuta Travel (fictional)",
+  "assistants": [
+    {
+      "slug": "email-reply",
+      "name": "Customer email reply drafter",
+      "purpose": "Drafts a reply to a customer email in English, Italian or Albanian that follows the cancellation policy and the price list, and flags anything a manager must decide.",
+      "ownerRole": "Customer care lead",
+      "outputFormat": "text",
+      "rules": 6,
+      "examples": 4,
+      "knowledgeFiles": [
+        "cancellation-policy.md",
+        "price-list.md",
+        "tone-guide.md"
+      ],
+      "instructionsWords": 572,
+      "instructionsChars": 3461,
+      "lint": {
+        "ok": true,
+        "checksPassed": 10,
+        "checksRun": 10
+      },
+      "files": {
+        "chatgpt": "email-reply/chatgpt-custom-gpt.md",
+        "claudeProject": "email-reply/claude-project/"
+      }
+    },
+    {
+      "slug": "itinerary-builder",
+      "name": "Itinerary builder",
+      "purpose": "Turns a client brief into a draft day-by-day itinerary with a per-person price range, built only from our tours, partner hotels and drive times.",
+      "ownerRole": "Sales lead",
+      "outputFormat": "markdown",
+      "rules": 6,
+      "examples": 3,
+      "knowledgeFiles": [
+        "tours-and-prices.md",
+        "partner-hotels.md",
+        "routes-and-times.md"
+      ],
+      "instructionsWords": 589,
+      "instructionsChars": 3583,
+      "lint": {
+        "ok": true,
+        "checksPassed": 10,
+        "checksRun": 10
+      },
+      "files": {
+        "chatgpt": "itinerary-builder/chatgpt-custom-gpt.md",
+        "claudeProject": "itinerary-builder/claude-project/"
+      }
+    },
+    {
+      "slug": "contract-summariser",
+      "name": "Supplier contract summariser",
+      "purpose": "Reads a pasted supplier contract and returns a plain-language summary, an eight-point risk checklist and questions to send back, without ever approving the contract.",
+      "ownerRole": "Operations manager",
+      "outputFormat": "markdown",
+      "rules": 7,
+      "examples": 3,
+      "knowledgeFiles": [
+        "risk-checklist.md",
+        "signing-rules.md",
+        "glossary.md"
+      ],
+      "instructionsWords": 552,
+      "instructionsChars": 3239,
+      "lint": {
+        "ok": true,
+        "checksPassed": 10,
+        "checksRun": 10
+      },
+      "files": {
+        "chatgpt": "contract-summariser/chatgpt-custom-gpt.md",
+        "claudeProject": "contract-summariser/claude-project/"
+      }
+    },
+    {
+      "slug": "social-writer",
+      "name": "Social post writer",
+      "purpose": "Writes draft Instagram, Facebook and LinkedIn posts in English, Italian or Albanian from a current offer, in the agency's tone, and flags anything it must not say.",
+      "ownerRole": "Marketing assistant",
+      "outputFormat": "json",
+      "rules": 6,
+      "examples": 3,
+      "knowledgeFiles": [
+        "offers.md",
+        "brand-tone.md",
+        "platform-specs.md",
+        "hashtag-bank.md"
+      ],
+      "instructionsWords": 517,
+      "instructionsChars": 3268,
+      "lint": {
+        "ok": true,
+        "checksPassed": 10,
+        "checksRun": 10
+      },
+      "files": {
+        "chatgpt": "social-writer/chatgpt-custom-gpt.md",
+        "claudeProject": "social-writer/claude-project/"
+      }
+    },
+    {
+      "slug": "bookings-report",
+      "name": "Weekly bookings report explainer",
+      "purpose": "Turns the weekly bookings CSV into a short Monday report in plain language: revenue, cancellations, channels, data problems and questions, with every number traceable to rows.",
+      "ownerRole": "Operations manager",
+      "outputFormat": "markdown",
+      "rules": 6,
+      "examples": 3,
+      "knowledgeFiles": [
+        "column-guide.md",
+        "kpi-definitions.md",
+        "targets.md"
+      ],
+      "instructionsWords": 527,
+      "instructionsChars": 3209,
+      "lint": {
+        "ok": true,
+        "checksPassed": 10,
+        "checksRun": 10
+      },
+      "files": {
+        "chatgpt": "bookings-report/chatgpt-custom-gpt.md",
+        "claudeProject": "bookings-report/claude-project/"
+      }
+    }
+  ]
+}

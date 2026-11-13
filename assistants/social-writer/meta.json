@@ -1,0 +1,60 @@
+{
+  "slug": "social-writer",
+  "name": "Social post writer",
+  "purpose": "Writes draft Instagram, Facebook and LinkedIn posts in English, Italian or Albanian from a current offer, in the agency's tone, and flags anything it must not say.",
+  "ownerRole": "Marketing assistant",
+  "inputs": [
+    { "name": "topic", "label": "Topic or offer", "required": true, "multiline": false, "hint": "An offer from the offers list, or a plain topic." },
+    { "name": "platforms", "label": "Platforms", "required": true, "multiline": false, "hint": "Any of: instagram, facebook, linkedin." },
+    { "name": "language", "label": "Language", "required": true, "multiline": false, "hint": "en, it or al." },
+    { "name": "photo_description", "label": "Photo description", "required": true, "multiline": false, "hint": "What is in the photo. Write \"none\" if there is no photo." },
+    { "name": "guest_quote", "label": "Guest quote and consent", "required": true, "multiline": false, "hint": "Write \"none\", or the quote and whether consent is given." }
+  ],
+  "output": {
+    "format": "json",
+    "description": "One JSON object with a posts list (platform, language, text, hashtags, alt_text, char_count) and a flags list (code, message).",
+    "maxWords": 260,
+    "bannedPhrases": ["best", "ultimate", "amazing", "cheapest", "must-see", "dream", "guaranteed", "don't miss", "imperdibile", "paradiso", "meraviglioso", "parajsë", "i pabesueshëm"],
+    "json": {
+      "rootKeys": ["posts", "flags"],
+      "itemsPath": "posts",
+      "itemKeys": ["platform", "language", "text", "hashtags", "alt_text", "char_count"],
+      "limitsByField": { "field": "text", "keyField": "platform", "limits": { "instagram": 400, "facebook": 500, "linkedin": 600 } },
+      "arrayLimits": { "hashtags": { "min": 3, "max": 5 } },
+      "stringMax": { "alt_text": 125 },
+      "lengthFieldMatches": { "count": "char_count", "of": "text" },
+      "enums": { "platform": ["instagram", "facebook", "linkedin"], "language": ["en", "it", "al"] },
+      "allowedFrom": { "field": "hashtags", "knowledge": "hashtag-bank.md" },
+      "flagKeys": ["code", "message"]
+    }
+  },
+  "doDont": {
+    "do": [
+      "Give the photo description every time: it becomes the alt text.",
+      "Check each post against the offer before publishing.",
+      "Get written guest consent before anyone asks for a quote to be used."
+    ],
+    "dont": [
+      "Do not ask for discounts, flash sales or competitor comparisons: the assistant flags them.",
+      "Do not edit prices or dates in the post without changing the offer list.",
+      "Do not paste guest names into the request."
+    ]
+  },
+  "modelSettings": {
+    "temperature": 0.7,
+    "webBrowsing": false,
+    "codeInterpreter": false,
+    "notes": "Higher temperature gives more varied wording between posts. Facts still come only from the offers file. Web browsing off."
+  },
+  "paste": {
+    "chatgpt": "Explore GPTs, Create, Configure tab. Paste the Instructions block into Instructions, upload the four knowledge files under Knowledge, switch Web search and Code interpreter off.",
+    "claude": "Projects, Create project. Paste instructions.md into Set project instructions and add the four knowledge files under Project knowledge."
+  },
+  "preflight": ["card"],
+  "knowledge": ["offers.md", "brand-tone.md", "platform-specs.md", "hashtag-bank.md"],
+  "examples": [
+    { "id": "01-berat-offer", "title": "Current offer for Instagram and Facebook", "input": "01-berat-offer.input.md", "output": "01-berat-offer.output.json", "tags": ["R1", "R2", "R3", "R4"] },
+    { "id": "02-kruja-albanian-quote", "title": "Albanian Facebook post, guest quote without consent", "input": "02-kruja-albanian-quote.input.md", "output": "02-kruja-albanian-quote.output.json", "tags": ["R2", "R4", "R5"] },
+    { "id": "03-flash-sale-request", "title": "Fake flash sale, competitor jab and safety claim", "input": "03-flash-sale-request.input.md", "output": "03-flash-sale-request.output.json", "tags": ["R1", "R6"] }
+  ]
+}

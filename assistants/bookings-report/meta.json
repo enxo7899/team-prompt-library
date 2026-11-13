@@ -1,0 +1,50 @@
+{
+  "slug": "bookings-report",
+  "name": "Weekly bookings report explainer",
+  "purpose": "Turns the weekly bookings CSV into a short Monday report in plain language: revenue, cancellations, channels, data problems and questions, with every number traceable to rows.",
+  "ownerRole": "Operations manager",
+  "inputs": [
+    { "name": "week_label", "label": "Week", "required": true, "multiline": false, "hint": "For example: 2 to 8 November 2026." },
+    { "name": "last_week", "label": "Last week (optional)", "required": false, "multiline": false, "hint": "Last week's confirmed revenue and booking count, if you have them." },
+    { "name": "csv", "label": "Bookings CSV", "required": true, "multiline": true, "hint": "Paste the Weekly bookings export, header row included. Remove client name and email columns first." }
+  ],
+  "output": {
+    "format": "markdown",
+    "description": "Markdown with five headings: Headline, Data issues, What changed, Watch list, Questions for Monday. 250 words or fewer.",
+    "maxWords": 250,
+    "requiredHeadings": ["Headline", "Data issues", "What changed", "Watch list", "Questions for Monday"],
+    "mustMatch": ["EUR \\d"],
+    "refusalPrefix": "Cannot report:",
+    "bannedPhrases": ["because of", "caused by", "due to"],
+    "forbidPatterns": ["[\\w.+-]+@[\\w-]+\\.[\\w.-]+"]
+  },
+  "doDont": {
+    "do": [
+      "Remove client name and email columns before pasting.",
+      "Paste the full export with its header row.",
+      "Give last week's figures if you want a comparison."
+    ],
+    "dont": [
+      "Do not read a possible reason as a proven cause.",
+      "Do not paste a partial export and expect a weekly total.",
+      "Do not use the report to judge individual staff."
+    ]
+  },
+  "modelSettings": {
+    "temperature": 0.1,
+    "webBrowsing": false,
+    "codeInterpreter": true,
+    "notes": "Low temperature for steady arithmetic. Turn code interpreter on where it is offered so sums are calculated, not estimated; always spot-check the headline figure against the CSV."
+  },
+  "paste": {
+    "chatgpt": "Explore GPTs, Create, Configure tab. Paste the Instructions block into Instructions, upload the three knowledge files under Knowledge, switch Code interpreter on and Web search off.",
+    "claude": "Projects, Create project. Paste instructions.md into Set project instructions and add the three knowledge files under Project knowledge. Turn on the analysis tool if your plan offers it."
+  },
+  "preflight": ["card", "email"],
+  "knowledge": ["column-guide.md", "kpi-definitions.md", "targets.md"],
+  "examples": [
+    { "id": "01-clean-week", "title": "A clean week with a target miss and one very large booking", "input": "01-clean-week.input.md", "output": "01-clean-week.output.md", "tags": ["R1", "R2", "R5"] },
+    { "id": "02-messy-export", "title": "Duplicate, negative amount, missing amount and client emails", "input": "02-messy-export.input.md", "output": "02-messy-export.output.md", "tags": ["R1", "R2", "R3", "R4"] },
+    { "id": "03-broken-export", "title": "Three rows and missing columns", "input": "03-broken-export.input.md", "output": "03-broken-export.output.md", "tags": ["R6"] }
+  ]
+}

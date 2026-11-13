@@ -1,0 +1,21 @@
+{
+  "requiredSections": ["role", "audience", "inputs", "output format", "rules", "refusals and escalation", "examples"],
+  "minSectionWords": 8,
+  "instructionWords": { "min": 180, "max": 700 },
+  "instructionMaxChars": 8000,
+  "knowledgeWords": { "min": 40, "max": 700 },
+  "minExamples": 3,
+  "minKnowledgeFiles": 2,
+  "minRules": 4,
+  "placeholderPatterns": [
+    "\\bTODO\\b", "\\bTBD\\b", "\\bFIXME\\b", "\\bXXX+\\b", "lorem ipsum",
+    "\\[(insert|your|company|name|client|date|xxx)[^\\]]*\\]", "<(insert|your)[^>]*>", "\\{\\{[^}]*\\}\\}"
+  ],
+  "hardWords": ["must", "never", "always", "only", "do not", "or fewer", "at most", "maximum", "exactly", "no more than", "at least"],
+  "weakPhrases": ["try to", "if possible", "where possible", "do your best", "feel free", "be creative", "use your judgement", "use your judgment", "as appropriate", "if you can", "maybe", "ideally"],
+  "bannedPhrases": [
+    "as an ai", "language model", "i'm just an ai", "i am just an ai", "delve", "world-class", "unforgettable",
+    "hidden gem", "bucket list", "once in a lifetime", "once-in-a-lifetime", "paradise", "stunning", "breathtaking",
+    "game-changer", "seamless", "great question", "i hope this email finds you well", "!!", "100% guaranteed"
+  ]
+}

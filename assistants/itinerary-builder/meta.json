@@ -1,0 +1,50 @@
+{
+  "slug": "itinerary-builder",
+  "name": "Itinerary builder",
+  "purpose": "Turns a client brief into a draft day-by-day itinerary with a per-person price range, built only from our tours, partner hotels and drive times.",
+  "ownerRole": "Sales lead",
+  "inputs": [
+    { "name": "client_brief", "label": "Client brief (their own words)", "required": true, "multiline": true, "hint": "Paste the client's message or your call notes." },
+    { "name": "travel_dates", "label": "Travel dates", "required": true, "multiline": false, "hint": "Write \"not given\" if unknown." },
+    { "name": "travellers", "label": "Travellers", "required": true, "multiline": false, "hint": "For example: 2 adults, or 3 adults and 1 child (9)." },
+    { "name": "budget", "label": "Budget per person (EUR, excluding flights)", "required": true, "multiline": false, "hint": "Write \"not given\" if unknown." },
+    { "name": "pace_mobility", "label": "Pace and mobility", "required": true, "multiline": false, "hint": "Anyone who cannot manage steps, hills or long walks must be named here." }
+  ],
+  "output": {
+    "format": "markdown",
+    "description": "Markdown with four headings: Overview, Day by day, Price estimate, Open questions. 600 words or fewer.",
+    "maxWords": 600,
+    "requiredHeadings": ["Overview", "Day by day", "Price estimate", "Open questions"],
+    "mustContain": ["Estimate, not a quote"],
+    "mustMatch": ["^### Day \\d+: .+"]
+  },
+  "doDont": {
+    "do": [
+      "Fill in mobility even when it is \"none\": the plan depends on it.",
+      "Check every drive time and price against the knowledge files before sending.",
+      "Price children, single rooms and unlisted items by hand."
+    ],
+    "dont": [
+      "Do not send the estimate as a quote.",
+      "Do not let the assistant add venues, hotels or prices that we do not sell.",
+      "Do not plan Theth outside June to September or anything outside our coverage."
+    ]
+  },
+  "modelSettings": {
+    "temperature": 0.4,
+    "webBrowsing": false,
+    "codeInterpreter": false,
+    "notes": "A little variety in the wording is fine; the plan itself is limited by the knowledge files. Web browsing off so no outside venues creep in."
+  },
+  "paste": {
+    "chatgpt": "Explore GPTs, Create, Configure tab. Paste the Instructions block into Instructions, upload the three knowledge files under Knowledge, switch Web search off.",
+    "claude": "Projects, Create project. Paste instructions.md into Set project instructions and add the three knowledge files under Project knowledge."
+  },
+  "preflight": ["card"],
+  "knowledge": ["tours-and-prices.md", "partner-hotels.md", "routes-and-times.md"],
+  "examples": [
+    { "id": "01-couple-four-days", "title": "Couple, relaxed 4-day weekend", "input": "01-couple-four-days.input.md", "output": "01-couple-four-days.output.md", "tags": ["R1", "R3", "R4"] },
+    { "id": "02-family-grandmother", "title": "Family with a grandmother who cannot manage steps, tight budget", "input": "02-family-grandmother.input.md", "output": "02-family-grandmother.output.md", "tags": ["R1", "R2", "R4", "R5"] },
+    { "id": "03-winter-theth-dubrovnik", "title": "Winter Theth hike and Dubrovnik request", "input": "03-winter-theth-dubrovnik.input.md", "output": "03-winter-theth-dubrovnik.output.md", "tags": ["R1", "R5", "R6"] }
+  ]
+}

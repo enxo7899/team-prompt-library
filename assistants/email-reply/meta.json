@@ -1,0 +1,127 @@
+{
+  "slug": "email-reply",
+  "name": "Customer email reply drafter",
+  "purpose": "Drafts a reply to a customer email in English, Italian or Albanian that follows the cancellation policy and the price list, and flags anything a manager must decide.",
+  "ownerRole": "Customer care lead",
+  "inputs": [
+    {
+      "name": "agent_name",
+      "label": "Your first name",
+      "required": true,
+      "multiline": false,
+      "hint": "Used for the sign-off."
+    },
+    {
+      "name": "client_email",
+      "label": "Client email (full text)",
+      "required": true,
+      "multiline": true,
+      "hint": "Paste the whole email, including the sender line and subject."
+    },
+    {
+      "name": "booking_notes",
+      "label": "Booking notes",
+      "required": false,
+      "multiline": false,
+      "hint": "Facts from the booking system. Leave empty if there is no booking yet."
+    }
+  ],
+  "output": {
+    "format": "text",
+    "description": "Plain-text email: a Subject line, a body of 180 words or fewer, then an internal note for the sender.",
+    "maxWords": 260,
+    "mustContain": [
+      "Subject: Re:",
+      "Internal note (not for the client):"
+    ],
+    "forbidMarkdown": true,
+    "refusalPrefix": "Not a customer email.",
+    "bannedPhrases": [
+      "we guarantee",
+      "i promise",
+      "garantiamo",
+      "le promettiamo",
+      "ju garantojmë",
+      "do t'ju rimbursojmë",
+      "le rimborseremo"
+    ],
+    "forbidPatterns": [
+      "\\b(?:\\d[ -]?){13,19}\\b"
+    ]
+  },
+  "doDont": {
+    "do": [
+      "Read the draft and the internal note before sending.",
+      "Add booking facts in Booking notes so the draft never has to guess.",
+      "Send exceptions and complaints to the Manager exactly as the internal note says."
+    ],
+    "dont": [
+      "Do not paste card numbers or passport details into the assistant.",
+      "Do not promise a refund because the draft sounds kind.",
+      "Do not send a draft that quotes a price you cannot find in the price list."
+    ]
+  },
+  "modelSettings": {
+    "temperature": 0.3,
+    "webBrowsing": false,
+    "codeInterpreter": false,
+    "notes": "Low temperature keeps wording close to the policy. Web browsing off so prices only come from the knowledge files."
+  },
+  "paste": {
+    "chatgpt": "Explore GPTs, Create, Configure tab. Paste the Instructions block into Instructions, upload the three knowledge files under Knowledge, switch Web search and Code interpreter off.",
+    "claude": "Projects, Create project. Paste instructions.md into Set project instructions and add the three knowledge files under Project knowledge."
+  },
+  "preflight": [
+    "card"
+  ],
+  "knowledge": [
+    "cancellation-policy.md",
+    "price-list.md",
+    "tone-guide.md"
+  ],
+  "examples": [
+    {
+      "id": "01-italian-late-cancellation",
+      "title": "Italian client asks for a refund inside 24 hours",
+      "input": "01-italian-late-cancellation.input.md",
+      "output": "01-italian-late-cancellation.output.txt",
+      "tags": [
+        "R1",
+        "R2",
+        "R5"
+      ]
+    },
+    {
+      "id": "02-english-price-question",
+      "title": "English price question with one item we do not sell",
+      "input": "02-english-price-question.input.md",
+      "output": "02-english-price-question.output.txt",
+      "tags": [
+        "R1",
+        "R3",
+        "R5"
+      ]
+    },
+    {
+      "id": "03-albanian-injury-complaint",
+      "title": "Albanian injury complaint with a legal threat",
+      "input": "03-albanian-injury-complaint.input.md",
+      "output": "03-albanian-injury-complaint.output.txt",
+      "tags": [
+        "R1",
+        "R6"
+      ]
+    },
+    {
+      "id": "04-english-card-number",
+      "title": "Client pastes a card number into the email",
+      "input": "04-english-card-number.input.md",
+      "output": "04-english-card-number.output.txt",
+      "tags": [
+        "R3",
+        "R4",
+        "R5"
+      ]
+    }
+  ]
+}

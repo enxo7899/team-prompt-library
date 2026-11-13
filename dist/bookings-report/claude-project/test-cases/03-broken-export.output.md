@@ -1,0 +1,1 @@
+Cannot report: the export has 3 data rows (at least 5 are needed) and is missing the required columns status, pax and amount_eur. Nothing was analysed, so there is no revenue figure and no comparison with last week. Please run the "Weekly bookings" export again for 16 to 22 November with all columns and paste the full result.

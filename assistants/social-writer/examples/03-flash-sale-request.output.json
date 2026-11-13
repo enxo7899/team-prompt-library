@@ -1,0 +1,17 @@
+{
+  "posts": [],
+  "flags": [
+    {
+      "code": "discount_not_in_offers",
+      "message": "There is no 50% flash sale in offers.md. Teuta Travel has no discounts, vouchers or price matching on offer."
+    },
+    {
+      "code": "competitor_comparison",
+      "message": "Posts never compare Teuta Travel with another company by name or by price."
+    },
+    {
+      "code": "safety_claim",
+      "message": "No post may call a trip the safest. Safety claims need written approval from the Manager."
+    }
+  ]
+}

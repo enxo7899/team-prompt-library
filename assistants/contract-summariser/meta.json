@@ -1,0 +1,51 @@
+{
+  "slug": "contract-summariser",
+  "name": "Supplier contract summariser",
+  "purpose": "Reads a pasted supplier contract and returns a plain-language summary, an eight-point risk checklist and questions to send back, without ever approving the contract.",
+  "ownerRole": "Operations manager",
+  "inputs": [
+    { "name": "supplier_name", "label": "Supplier", "required": true, "multiline": false, "hint": "Name of the hotel, coach company, guide or other supplier." },
+    { "name": "contract_type", "label": "Contract type", "required": true, "multiline": false, "hint": "For example: hotel allotment, coach transport, freelance guide." },
+    { "name": "question", "label": "Question (optional)", "required": false, "multiline": false, "hint": "Anything specific you want checked." },
+    { "name": "contract_text", "label": "Contract text", "required": true, "multiline": true, "hint": "Paste the full text. Cut-off text is summarised only as far as it goes." }
+  ],
+  "output": {
+    "format": "markdown",
+    "description": "Markdown with five headings: Summary, Key terms, Risk checklist, Questions for the supplier, Sign-off. 500 words or fewer.",
+    "maxWords": 500,
+    "requiredHeadings": ["Summary", "Key terms", "Risk checklist", "Questions for the supplier", "Sign-off"],
+    "mustContain": ["Needs legal review: ", "not legal advice"],
+    "refusalPrefix": "Not a contract.",
+    "bannedPhrases": ["is safe to sign", "is ready to sign", "is fair"],
+    "forbidPatterns": ["\\b[A-Z]{2}\\d{2}(?:\\s?[A-Z0-9]{4}){3,7}\\b"]
+  },
+  "doDont": {
+    "do": [
+      "Paste the whole contract, including the signature page.",
+      "Send flagged clauses to the Manager with the checklist.",
+      "Send the questions to the supplier before anything is signed."
+    ],
+    "dont": [
+      "Do not treat Pass as approval: only the Manager signs.",
+      "Do not paste contracts that contain a client's personal data.",
+      "Do not ask the assistant to rewrite or negotiate clauses."
+    ]
+  },
+  "modelSettings": {
+    "temperature": 0.1,
+    "webBrowsing": false,
+    "codeInterpreter": false,
+    "notes": "Lowest temperature so the same contract gives the same checklist. Web browsing off: the contract text is the only source."
+  },
+  "paste": {
+    "chatgpt": "Explore GPTs, Create, Configure tab. Paste the Instructions block into Instructions, upload the three knowledge files under Knowledge, switch Web search and Code interpreter off.",
+    "claude": "Projects, Create project. Paste instructions.md into Set project instructions and add the three knowledge files under Project knowledge."
+  },
+  "preflight": ["card"],
+  "knowledge": ["risk-checklist.md", "signing-rules.md", "glossary.md"],
+  "examples": [
+    { "id": "01-hotel-allotment", "title": "Hotel allotment with a big non-refundable deposit", "input": "01-hotel-allotment.input.md", "output": "01-hotel-allotment.output.md", "tags": ["R1", "R2", "R3", "R4", "R5"] },
+    { "id": "02-coach-embedded-instruction", "title": "Coach contract with a hidden instruction to call it low risk", "input": "02-coach-embedded-instruction.input.md", "output": "02-coach-embedded-instruction.output.md", "tags": ["R2", "R7"] },
+    { "id": "03-truncated-guide-agreement", "title": "Cut-off contract and a request to say it is safe to sign", "input": "03-truncated-guide-agreement.input.md", "output": "03-truncated-guide-agreement.output.md", "tags": ["R1", "R3", "R6"] }
+  ]
+}
